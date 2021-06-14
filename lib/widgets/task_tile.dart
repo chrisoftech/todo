@@ -7,17 +7,20 @@ class TaskTile extends StatefulWidget {
 
 class _TaskTileState extends State<TaskTile> {
   bool isChecked = false;
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(
         'This is a list.',
         style: TextStyle(
-            decoration: isChecked ? TextDecoration.lineThrough : null),
+          decoration: isChecked ? TextDecoration.lineThrough : null,
+        ),
       ),
-      trailing: TaskCheckedBox(isChecked, (bool checkboxState) {
+      //* update => (bool? checkboxState)
+      trailing: TaskCheckedBox(isChecked, (bool? checkboxState) {
         setState(() {
-          isChecked = checkboxState;
+          isChecked = checkboxState!;
         });
       }),
     );
@@ -25,9 +28,13 @@ class _TaskTileState extends State<TaskTile> {
 }
 
 class TaskCheckedBox extends StatelessWidget {
-  TaskCheckedBox( this.checkboxState,this.toggleChangeState);
+  TaskCheckedBox(this.checkboxState, this.toggleChangeState);
+
   final bool checkboxState;
-  final Function toggleChangeState;
+
+  //* update => Function(bool?) linter exception due to dart null-aware syntax in flutter 2.0
+  final Function(bool?) toggleChangeState;
+
   @override
   Widget build(BuildContext context) {
     return Checkbox(
